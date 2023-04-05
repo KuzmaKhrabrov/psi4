@@ -110,12 +110,8 @@ extern int F_DGGHRD(char*, char*, int*, int*, int*, double*, int*, double*, int*
 extern int F_DGGLSE(int*, int*, int*, double*, int*, double*, int*, double*, double*, double*, double*, int*, int*);
 extern int F_DGGQRF(int*, int*, int*, double*, int*, double*, double*, int*, double*, double*, int*, int*);
 extern int F_DGGRQF(int*, int*, int*, double*, int*, double*, double*, int*, double*, double*, int*, int*);
-extern int F_DGGSVD(char*, char*, char*, int*, int*, int*, int*, int*, double*, int*, double*, int*, double*, double*,
-                    double*, int*, double*, int*, double*, int*, double*, int*, int*);
 extern int F_DGGSVD3(char*, char*, char*, int*, int*, int*, int*, int*, double*, int*, double*, int*, double*, double*,
                      double*, int*, double*, int*, double*, int*, double*, int*, int*, int*);
-extern int F_DGGSVP(char*, char*, char*, int*, int*, int*, double*, int*, double*, int*, double*, double*, int*, int*,
-                    double*, int*, double*, int*, double*, int*, int*, double*, double*, int*);
 extern int F_DGGSVP3(char*, char*, char*, int*, int*, int*, double*, int*, double*, int*, double*, double*, int*, int*,
                      double*, int*, double*, int*, double*, int*, int*, double*, double*, int*, int*);
 extern int F_DGTCON(char*, int*, double*, double*, double*, double*, int*, double*, double*, double*, int*, int*);
@@ -6470,15 +6466,10 @@ int C_DGGSVD(char jobu, char jobv, char jobq, int m, int n, int p, int* k, int* 
              int ldb, double* alpha, double* beta, double* u, int ldu, double* v, int ldv, double* q, int ldq,
              double* work, int* iwork) {
     int info;
-#ifdef LAPACK_HAS_DGGSVD3
     // Infer dimension of work array: max(3*N,M,P)+N
     int lwork = std::max(std::max(3 * n, m), p) + n;
     ::F_DGGSVD3(&jobu, &jobv, &jobq, &m, &n, &p, k, l, a, &lda, b, &ldb, alpha, beta, u, &ldu, v, &ldv, q, &ldq, work,
                 iwork, &lwork, &info);
-#else
-    ::F_DGGSVD(&jobu, &jobv, &jobq, &m, &n, &p, k, l, a, &lda, b, &ldb, alpha, beta, u, &ldu, v, &ldv, q, &ldq, work,
-               iwork, &info);
-#endif
     return info;
 }
 
@@ -6939,15 +6930,10 @@ int C_DGGSVP(char jobu, char jobv, char jobq, int m, int p, int n, double* a, in
              double tolb, int* k, int* l, double* u, int ldu, double* v, int ldv, double* q, int ldq, int* iwork,
              double* tau, double* work) {
     int info;
-#ifdef LAPACK_HAS_DGGSVP3
     // Infer dimension of work array: max(3*N,M,P)
     int lwork = std::max(std::max(3 * n, m), p);
     ::F_DGGSVP3(&jobu, &jobv, &jobq, &m, &p, &n, a, &lda, b, &ldb, &tola, &tolb, k, l, u, &ldu, v, &ldv, q, &ldq, iwork,
                 tau, work, &lwork, &info);
-#else
-    ::F_DGGSVP(&jobu, &jobv, &jobq, &m, &p, &n, a, &lda, b, &ldb, &tola, &tolb, k, l, u, &ldu, v, &ldv, q, &ldq, iwork,
-               tau, work, &info);
-#endif
     return info;
 }
 
